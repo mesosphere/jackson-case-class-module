@@ -4,6 +4,8 @@ import Keys._
 import com.typesafe.sbt.SbtScalariform._
 import scalariform.formatter.preferences._
 import sbtunidoc.Plugin.unidocSettings
+import ohnosequences.sbt.SbtS3Resolver.S3Resolver
+import ohnosequences.sbt.SbtS3Resolver.{ s3, s3resolver }
 
 object JacksonCaseClassModuleBuild extends Build {
 
@@ -32,7 +34,7 @@ object JacksonCaseClassModuleBuild extends Build {
   lazy val root = Project(
     id = PROJECT_NAME,
     base = file("."),
-    settings = commonSettings
+    settings = commonSettings ++ unidocSettings ++ publishSettings
   )
 
 //////////////////////////////////////////////////////////////////////////////
@@ -42,9 +44,12 @@ object JacksonCaseClassModuleBuild extends Build {
   lazy val commonSettings =
     Project.defaultSettings ++
     basicSettings ++
-    unidocSettings ++
     scalariformSettings ++
     customFormatSettings
+
+  lazy val publishSettings = S3Resolver.defaults ++ Seq(
+    publishTo := Some(s3resolver.value("Mesosphere Public Repo", s3("downloads.mesosphere.io/maven")))
+  )
 
   lazy val basicSettings = Seq(
     version := PROJECT_VERSION,
