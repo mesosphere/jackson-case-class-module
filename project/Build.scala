@@ -3,6 +3,7 @@ import Keys._
 
 import com.typesafe.sbt.SbtScalariform._
 import scalariform.formatter.preferences._
+import sbtunidoc.Plugin.unidocSettings
 
 object JacksonCaseClassModuleBuild extends Build {
 
@@ -38,26 +39,32 @@ object JacksonCaseClassModuleBuild extends Build {
 // SETTINGS
 //////////////////////////////////////////////////////////////////////////////
 
-  lazy val commonSettings = Project.defaultSettings ++
-                            basicSettings ++
-                            scalariformSettings ++
-                            customFormatSettings
+  lazy val commonSettings =
+    Project.defaultSettings ++
+    basicSettings ++
+    unidocSettings ++
+    scalariformSettings ++
+    customFormatSettings
 
   lazy val basicSettings = Seq(
     version := PROJECT_VERSION,
     organization := ORGANIZATION,
     scalaVersion := SCALA_VERSION,
+
     libraryDependencies ++= Seq(
       "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % JACKSON_MODULE_SCALA_VERSION,
       "org.scala-lang" % "scala-reflect" % SCALA_VERSION,
       "org.scalatest" %% "scalatest" % SCALATEST_VERSION % "test"
     ),
+
     scalacOptions in Compile ++= Seq(
       "-unchecked",
       "-deprecation",
       "-feature"
     ),
+
     parallelExecution in Test := false,
+
     fork in Test := true
   )
 
