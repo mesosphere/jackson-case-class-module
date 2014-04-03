@@ -12,10 +12,10 @@ import mesosphere.jackson.CaseClassModule
 val mapper = new ObjectMapper
 mapper.registerModule(CaseClassModule)
 
-case class Person(name: String, age: Int)
+case class Person(name: String, age: Int = 30)
 
 val readResult = mapper.readValue(
-  """{ "name": "Alfonso", "age": 26 }""",
+  """{ "name": "Alfonso" }""",
   classOf[Person]
 )
 ```
