@@ -19,7 +19,7 @@ protected[mesosphere] object CompanionMetadata {
     */
   def apply(classSymbol: ClassSymbol): Option[CompanionMetadata] = {
 
-     // None if the supplied class type has no companion
+    // None if the supplied class type has no companion
     val companionSymbol: Option[ModuleSymbol] =
       if (!classSymbol.companionSymbol.isModule) None
       else Some(classSymbol.companionSymbol.asModule)
