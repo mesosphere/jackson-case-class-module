@@ -15,7 +15,7 @@ object JacksonCaseClassModuleBuild extends Build {
 
   val ORGANIZATION = "mesosphere"
   val PROJECT_NAME = "jackson-case-class-module"
-  val PROJECT_VERSION = "0.1.0-SNAPSHOT"
+  val PROJECT_VERSION = "0.1.0"
   val SCALA_VERSION = "2.10.4"
 
 
