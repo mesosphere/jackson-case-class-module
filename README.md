@@ -41,4 +41,6 @@ val readResult = mapper.readValue(
   """{ "name": "Alfonso" }""",
   classOf[Person]
 )
+
+assert(readResult.age == 30) // hooray
 ```
