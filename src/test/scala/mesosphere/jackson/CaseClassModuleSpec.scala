@@ -1,12 +1,14 @@
 package mesosphere.jackson
 
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import java.lang.{ Integer => JInt, Double => JDouble }
 
 object CaseClassModuleSpec {
-  case class Person(name: String, age: Int)
-  case class Defaults(x: Double = math.E, y: Double = math.Pi, z: String = "foobar")
-  case class ComplexDefaults(xs: Seq[Int] = Seq(1, 2, 3))
+  case class Person(name: String, age: JInt)
+  case class Defaults(x: JDouble = math.E, y: JDouble = math.Pi, z: String = "foobar")
+  case class ComplexDefaults(xs: Seq[JInt] = Seq(1, 2, 3))
   case class NestedDefaults(defaults: ComplexDefaults = ComplexDefaults(Seq(5)))
+  case class WithOption(n: Option[JInt])
 }
 
 class CaseClassModuleSpec extends Spec with JacksonHelpers {
@@ -30,6 +32,16 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
   it should "respect default values for nested case classes" in {
     deserialize[NestedDefaults]("{}") should equal (NestedDefaults(ComplexDefaults(Seq(5))))
     deserialize[NestedDefaults]("""{"defaults": {} }""") should equal (NestedDefaults(ComplexDefaults(Seq(1, 2, 3))))
+  }
+
+  it should "be liberal in its interpretation of numbers" in {
+    deserialize[Defaults]("""{ "x": "5.0" }""") should equal (Defaults(x = 5.0))
+  }
+
+  it should "read optional values" in {
+    deserialize[WithOption]("""{ "n": 5 }""") should equal (WithOption(Some(5)))
+    deserialize[WithOption]("""{ "n": "5" }""") should equal (WithOption(Some(5)))
+    deserialize[WithOption]("""{}""") should equal (WithOption(None))
   }
 
 }

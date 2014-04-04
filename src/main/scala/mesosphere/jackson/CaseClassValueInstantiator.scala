@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.{
   DeserializationConfig,
   DeserializationContext,
   JavaType,
-  PropertyMetadata
+  PropertyMetadata,
+  PropertyName
 }
 import com.fasterxml.jackson.databind.deser.CreatorProperty
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
 import com.fasterxml.jackson.databind.`type`.{ TypeBindings, TypeFactory }
 
+import scala.collection.immutable.ListMap
 import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe._
 import scala.util.Try
@@ -38,7 +40,7 @@ protected class CaseClassValueInstantiator(
     * Contains `Some(value)` if there is a default value for the associated
     * parameter name for the supplied case class type and `None` otherwise.
     */
-  private[this] lazy val defaultArguments: Map[String, Option[() => Any]] = {
+  private[this] lazy val defaultArguments: ListMap[String, Option[() => Any]] = {
     val companion = CompanionMetadata(classSymbol).get
 
     val applySymbol: MethodSymbol = {
@@ -59,12 +61,12 @@ protected class CaseClassValueInstantiator(
       }
     }
 
-    applySymbol.paramss.flatten.zipWithIndex.map {
+    ListMap(applySymbol.paramss.flatten.zipWithIndex.map {
       case (p, i) =>
         val typeSig = p.asTerm.typeSignature.typeSymbol.asClass
         val cls = classLoaderMirror.runtimeClass(typeSig)
         p.name.toString -> valueFor(i)
-    }.toMap
+    }: _*)
   }
 
   private[this] lazy val factory =
@@ -76,17 +78,21 @@ protected class CaseClassValueInstantiator(
   private[this] lazy val ctorProps = for {
     prop <- beanDesc.findProperties().asScala
     param <- Option(prop.getConstructorParameter)
-    name = prop.getName
-    wrap = prop.getWrapperName
+    name = new PropertyName(prop.getName)
+    wrapperName = prop.getWrapperName
     idx = param.getIndex
-    javaType = {
-      import CaseClassValueInstantiator.primitiveReplacements
-      val typ = param.getType(typeBindings)
-      primitiveReplacements.get(typ.getRawClass.getName).getOrElse(typ)
-    }
+    javaType = param.getType(typeBindings)
   } yield {
     new CreatorProperty(
-      name, javaType, wrap, null, null, param, idx, null, true
+      name,
+      javaType,
+      wrapperName,
+      null,
+      null,
+      param,
+      idx,
+      null,
+      PropertyMetadata.STD_OPTIONAL
     )
   }
 
@@ -107,25 +113,7 @@ protected class CaseClassValueInstantiator(
         if (deserialized == null && default.isDefined) default.get.apply()
         else deserialized
     }
-    factory.buildWith(params).asInstanceOf[Object]
+    factory.buildWith(params.toArray.toSeq).asInstanceOf[Object]
   }
-
-}
-
-protected object CaseClassValueInstantiator {
-
-  val typeFactory = TypeFactory.defaultInstance
-  import typeFactory.{ uncheckedSimpleType => jType }
-
-  val primitiveReplacements: Map[String, JavaType] = Map(
-    classOf[Byte].getName -> jType(classOf[java.lang.Byte]),
-    classOf[Short].getName -> jType(classOf[java.lang.Short]),
-    classOf[Int].getName -> jType(classOf[java.lang.Integer]),
-    classOf[Long].getName -> jType(classOf[java.lang.Long]),
-    classOf[Float].getName -> jType(classOf[java.lang.Float]),
-    classOf[Double].getName -> jType(classOf[java.lang.Double]),
-    classOf[Boolean].getName -> jType(classOf[java.lang.Boolean]),
-    classOf[Char].getName -> jType(classOf[java.lang.Character])
-  )
 
 }
