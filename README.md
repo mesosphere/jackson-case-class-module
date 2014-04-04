@@ -35,7 +35,7 @@ import mesosphere.jackson.CaseClassModule
 val mapper = new ObjectMapper
 mapper.registerModule(CaseClassModule)
 
-case class Person(name: String, age: Int = 30)
+case class Person(name: String, age: Integer = 30)
 
 val readResult = mapper.readValue(
   """{ "name": "Alfonso" }""",
