@@ -4,6 +4,29 @@ Provides deserialization support for Scala case classes, including proper handli
 
 Assumes that the default case class constructor's arguments are sufficient for deserialization. 
 
+**SBT:**
+
+```scala
+resolvers += "Mesosphere Public Repository" at "http://downloads.mesosphere.io/maven"
+libraryDependencies += "mesosphere" %% "jackson-case-class-module" % 0.1.0
+```
+
+**Maven:**
+
+```xml
+<repository>
+  <id>mesosphere-public-repo</id>
+  <name>Mesosphere Public Repo</name>
+  <url>http://downloads.mesosphere.io/maven</url>
+</repository>
+
+<dependency>
+  <groupId>mesosphere</groupId>
+  <artifactId>jackson-case-class-module_2.10</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
 ## Usage
 
 ```scala
