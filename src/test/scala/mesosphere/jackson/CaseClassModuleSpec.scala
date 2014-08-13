@@ -1,6 +1,7 @@
 package mesosphere.jackson
 
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.lang.{ Integer => JInt, Double => JDouble }
 
 object CaseClassModuleSpec {
@@ -42,6 +43,19 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
     deserialize[WithOption]("""{ "n": 5 }""") should equal (WithOption(Some(5)))
     deserialize[WithOption]("""{ "n": "5" }""") should equal (WithOption(Some(5)))
     deserialize[WithOption]("""{}""") should equal (WithOption(None))
+  }
+
+  it should "read optional from example" in {
+    case class Person(name: String, age: Integer = 30)
+    val mapper = new ObjectMapper
+    mapper.registerModule(DefaultScalaModule)
+    mapper.registerModule(CaseClassModule)
+    val readResult = mapper.readValue(
+      """{ "name": "Alfonso" }""",
+      classOf[Person]
+    )
+    readResult should equal (Person("Alfonso"))
+
   }
 
 }
