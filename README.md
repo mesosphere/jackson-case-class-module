@@ -32,8 +32,10 @@ _NOTE: when using Jackson that case classes should be at the top level of your f
 
 ```scala
 import mesosphere.jackson.CaseClassModule
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 val mapper = new ObjectMapper
+mapper.registerModule(DefaultScalaModule)
 mapper.registerModule(CaseClassModule)
 
 case class Person(name: String, age: Integer = 30)
