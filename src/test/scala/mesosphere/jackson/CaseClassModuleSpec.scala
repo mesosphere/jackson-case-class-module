@@ -9,6 +9,7 @@ object CaseClassModuleSpec {
   case class ComplexDefaults(xs: Seq[JInt] = Seq(1, 2, 3))
   case class NestedDefaults(defaults: ComplexDefaults = ComplexDefaults(Seq(5)))
   case class WithOption(n: Option[JInt])
+  case class OptionDefault(x: Option[Int] = Some(5))
 }
 
 class CaseClassModuleSpec extends Spec with JacksonHelpers {
@@ -42,6 +43,11 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
     deserialize[WithOption]("""{ "n": 5 }""") should equal (WithOption(Some(5)))
     deserialize[WithOption]("""{ "n": "5" }""") should equal (WithOption(Some(5)))
     deserialize[WithOption]("""{}""") should equal (WithOption(None))
+  }
+
+  it should "respect default values for optional arguments" in {
+    deserialize[OptionDefault]("{}") should equal (OptionDefault(Some(5)))
+    deserialize[OptionDefault]("""{ "x": 5 }""") should equal (OptionDefault(Some(5)))
   }
 
 }

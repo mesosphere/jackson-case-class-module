@@ -109,9 +109,9 @@ protected class CaseClassValueInstantiator(
     cxt: DeserializationContext,
     args: Array[Object]): Object = {
     val params: Seq[_] = (args.toSeq zip defaultArguments.values).map {
-      case (deserialized, default) =>
-        if (deserialized == null && default.isDefined) default.get.apply()
-        else deserialized
+      case (None, Some(default)) => default.apply
+      case (null, Some(default)) => default.apply
+      case (deserialized, _)     => deserialized
     }
     factory.buildWith(params.toArray.toSeq).asInstanceOf[Object]
   }
