@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 
 import com.typesafe.sbt.SbtScalariform._
+import sbtrelease.ReleasePlugin._
 import scalariform.formatter.preferences._
 import sbtunidoc.Plugin.unidocSettings
 import ohnosequences.sbt.SbtS3Resolver.S3Resolver
@@ -45,7 +46,8 @@ object JacksonCaseClassModuleBuild extends Build {
     Project.defaultSettings ++
     basicSettings ++
     scalariformSettings ++
-    customFormatSettings
+    customFormatSettings ++
+    releaseSettings
 
   lazy val publishSettings = S3Resolver.defaults ++ Seq(
     publishTo := Some(s3resolver.value("Mesosphere Public Repo", s3("downloads.mesosphere.io/maven")))
