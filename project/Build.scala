@@ -16,7 +16,6 @@ object JacksonCaseClassModuleBuild extends Build {
 
   val ORGANIZATION = "mesosphere"
   val PROJECT_NAME = "jackson-case-class-module"
-  val PROJECT_VERSION = "0.1.1-SNAPSHOT"
   val SCALA_VERSION = "2.10.4"
 
 
@@ -54,7 +53,6 @@ object JacksonCaseClassModuleBuild extends Build {
   )
 
   lazy val basicSettings = Seq(
-    version := PROJECT_VERSION,
     organization := ORGANIZATION,
     scalaVersion := SCALA_VERSION,
 
