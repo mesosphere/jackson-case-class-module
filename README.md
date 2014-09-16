@@ -28,11 +28,14 @@ libraryDependencies += "mesosphere" %% "jackson-case-class-module" % "0.1.0"
 ```
 
 ## Usage
+_NOTE: when using Jackson that case classes should be at the top level of your file to avoid issues that prevent jackson from being able to instantiate a new instance of your case class_
 
 ```scala
 import mesosphere.jackson.CaseClassModule
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 val mapper = new ObjectMapper
+mapper.registerModule(DefaultScalaModule)
 mapper.registerModule(CaseClassModule)
 
 case class Person(name: String, age: Integer = 30)
