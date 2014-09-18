@@ -8,7 +8,7 @@ Assumes that the default case class constructor's arguments are sufficient for d
 
 ```scala
 resolvers += "Mesosphere Public Repository" at "http://downloads.mesosphere.io/maven"
-libraryDependencies += "mesosphere" %% "jackson-case-class-module" % "0.1.1"
+libraryDependencies += "mesosphere" %% "jackson-case-class-module" % "0.1.2"
 ```
 
 **Maven:**
@@ -23,7 +23,7 @@ libraryDependencies += "mesosphere" %% "jackson-case-class-module" % "0.1.1"
 <dependency>
   <groupId>mesosphere</groupId>
   <artifactId>jackson-case-class-module_2.10</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 
