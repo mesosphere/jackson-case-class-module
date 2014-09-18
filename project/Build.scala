@@ -16,15 +16,13 @@ object JacksonCaseClassModuleBuild extends Build {
 
   val ORGANIZATION = "mesosphere"
   val PROJECT_NAME = "jackson-case-class-module"
-  val SCALA_VERSION = "2.10.4"
-
 
 //////////////////////////////////////////////////////////////////////////////
 // DEPENDENCY VERSIONS
 //////////////////////////////////////////////////////////////////////////////
 
   val JACKSON_MODULE_SCALA_VERSION = "2.4.1"
-  val SCALATEST_VERSION = "2.1.0"
+  val SCALATEST_VERSION = "2.2.1"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -54,11 +52,11 @@ object JacksonCaseClassModuleBuild extends Build {
 
   lazy val basicSettings = Seq(
     organization := ORGANIZATION,
-    scalaVersion := SCALA_VERSION,
+    crossScalaVersions := Seq("2.10.4", "2.11.2"),
 
     libraryDependencies ++= Seq(
-      "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % JACKSON_MODULE_SCALA_VERSION,
-      "org.scala-lang" % "scala-reflect" % SCALA_VERSION,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JACKSON_MODULE_SCALA_VERSION,
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scalatest" %% "scalatest" % SCALATEST_VERSION % "test"
     ),
 
