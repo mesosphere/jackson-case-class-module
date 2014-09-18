@@ -55,7 +55,7 @@ object JacksonCaseClassModuleBuild extends Build {
     crossScalaVersions := Seq("2.10.4", "2.11.2"),
 
     libraryDependencies ++= Seq(
-      "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % JACKSON_MODULE_SCALA_VERSION,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JACKSON_MODULE_SCALA_VERSION,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scalatest" %% "scalatest" % SCALATEST_VERSION % "test"
     ),
