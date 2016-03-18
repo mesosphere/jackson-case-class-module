@@ -10,6 +10,8 @@ object CaseClassModuleSpec {
   case class NestedDefaults(defaults: ComplexDefaults = ComplexDefaults(Seq(5)))
   case class WithOption(n: Option[JInt])
   case class OptionDefault(x: Option[Int] = Some(5))
+  case class WithArray(a: Array[JInt])
+  case class WithArrayDefault(a: Array[JInt] = Array(1, 2, 3))
 }
 
 class CaseClassModuleSpec extends Spec with JacksonHelpers {
@@ -50,4 +52,11 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
     deserialize[OptionDefault]("""{ "x": 5 }""") should equal (OptionDefault(Some(5)))
   }
 
+  it should "deserialize array" in {
+    deserialize[WithArray]("""{ "a": [1, 2, 3] }""").a should contain theSameElementsAs Array(1, 2, 3)
+  }
+
+  it should "respect default values for arrays" in {
+    deserialize[WithArrayDefault]("{}").a should contain theSameElementsAs Array(1, 2, 3)
+  }
 }

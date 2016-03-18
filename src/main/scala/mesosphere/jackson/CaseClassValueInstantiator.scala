@@ -64,7 +64,9 @@ protected class CaseClassValueInstantiator(
     ListMap(applySymbol.paramss.flatten.zipWithIndex.map {
       case (p, i) =>
         val typeSig = p.asTerm.typeSignature.typeSymbol.asClass
-        val cls = classLoaderMirror.runtimeClass(typeSig)
+        if (typeSig.fullName != "scala.Array") {
+          classLoaderMirror.runtimeClass(typeSig)
+        }
         p.name.toString -> valueFor(i)
     }: _*)
   }
