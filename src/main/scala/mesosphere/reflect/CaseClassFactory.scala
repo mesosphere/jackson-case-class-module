@@ -11,7 +11,7 @@ protected[mesosphere] class CaseClassFactory(cls: Class[_]) {
   val classSymbol = classLoaderMirror.classSymbol(cls)
   val tpe = classSymbol.toType
 
-  if (!(tpe <:< typeOf[Product] && classSymbol.isCaseClass))
+  if (!classSymbol.isCaseClass)
     throw new IllegalArgumentException(
       "CaseClassFactory only applies to case classes!"
     )

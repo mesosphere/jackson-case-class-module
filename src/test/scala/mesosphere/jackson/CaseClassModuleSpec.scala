@@ -1,7 +1,7 @@
 package mesosphere.jackson
 
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import java.lang.{ Integer => JInt, Double => JDouble }
+import java.lang.{Double ⇒ JDouble, Integer ⇒ JInt}
 
 object CaseClassModuleSpec {
   case class Person(name: String, age: JInt)
@@ -12,6 +12,7 @@ object CaseClassModuleSpec {
   case class OptionDefault(x: Option[Int] = Some(5))
   case class WithArray(a: Array[JInt])
   case class WithArrayDefault(a: Array[JInt] = Array(1, 2, 3))
+  case class GenericHolder[T](holder: T)
 }
 
 class CaseClassModuleSpec extends Spec with JacksonHelpers {
@@ -58,5 +59,9 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
 
   it should "respect default values for arrays" in {
     deserialize[WithArrayDefault]("{}").a should contain theSameElementsAs Array(1, 2, 3)
+  }
+
+  it should "deserialize generic holder" in {
+    deserialize[GenericHolder[List[Int]]]("""{ "holder": [1, 2, 3]}""") should equal(GenericHolder(List(1, 2, 3)))
   }
 }
