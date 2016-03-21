@@ -61,7 +61,29 @@ class CaseClassModuleSpec extends Spec with JacksonHelpers {
     deserialize[WithArrayDefault]("{}").a should contain theSameElementsAs Array(1, 2, 3)
   }
 
-  it should "deserialize generic holder" in {
+  it should "deserialize generic holder with Int list" in {
     deserialize[GenericHolder[List[Int]]]("""{ "holder": [1, 2, 3]}""") should equal(GenericHolder(List(1, 2, 3)))
+  }
+
+  it should "deserialize generic holder with case class without default values" in {
+    val json = """{ "holder": [
+      |{ "name": "name1", "age": 1},
+      |{ "name": "name2", "age": 2}
+      |]}""".stripMargin
+
+    val expected = GenericHolder(List(Person("name1", 1), Person("name2", 2)))
+
+    deserialize[GenericHolder[List[Person]]](json) should equal(expected)
+  }
+
+  it should "deserialize generic holder with case class with default values" in {
+    val json = """{ "holder": [
+                 |{ "x": 1, "y": 2},
+                 |{ "z": "test"}
+                 |]}""".stripMargin
+
+    val expected = GenericHolder(Seq(Defaults(x = 1.0, y = 2.0), Defaults(z = "test")))
+
+    deserialize[GenericHolder[Seq[Defaults]]](json) should equal(expected)
   }
 }
