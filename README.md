@@ -1,5 +1,7 @@
 # Jackson Case Class Module
 
+**This project is currently unused by Mesosphere projects and will no longer be maintained. We will not be accepting contributions or releasing new versions of this. You are welcome to fork the repo for your own use.**
+
 Provides deserialization support for Scala case classes, including proper handling of default values.
 
 Assumes that the default case class constructor's arguments are sufficient for deserialization. 
